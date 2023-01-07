@@ -1,0 +1,5 @@
+adb.exe
+AdbWinApi.dll
+AdbWinUsbApi.dll
+__pycache__/
+gracelist.txt
