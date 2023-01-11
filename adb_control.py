@@ -1,3 +1,15 @@
+"""
+Module for converting ADB output into friendlier Python objects.
+
+Currently, this is implemented as a class that uses AdbDriver to
+communicate with the ADB executable, calling its commands when functions
+request it to and returning ADB's standard output as a function-specific
+object that is easier to handle than a basic string.
+
+It also provides shortcuts for imperative commands (uninstall, pull) for use
+through native Python methods instead of building CLI parameters.
+"""
+
 from adb_driver import AdbDriver
 
 class AdbControl:

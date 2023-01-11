@@ -1,3 +1,11 @@
+"""
+Module for interfacing with the Android Debug Bridge (ADB) executable from Python.
+
+This is no more than a helper for creating an OOP handle over the native subprocess,
+with some neat extensions like a state machine for remembering CLI switches.
+
+The expunge module uses this for all ADB communication.
+"""
 import subprocess
 
 class AdbDriver:

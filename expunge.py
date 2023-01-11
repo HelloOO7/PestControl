@@ -1,3 +1,14 @@
+"""
+Main module of the PestControl program.
+
+This module can be run from the command line and used to uninstall packages filtered through
+its underlying analyzers from the target device.
+
+Command line parameters can be used to fine-tune the behavior of the program, but running it without
+any user input is also possible, baring situations when there are multiple devices connected, in which
+the program will prompt the user to select a device.
+"""
+
 import os
 import platform
 import shutil
@@ -8,11 +19,13 @@ from zipfile import ZipFile
 from zipfile import BadZipFile
 from adb_control import AdbControl
 
+import analyze
+
 #imports for ANALYZERS mapping
 from analyze_js import JSAnalyzer
 from analyze_rn import RNAnalyzer
 
-import sys 
+import sys
 
 def is_debug() -> bool:
     return hasattr(sys, 'gettrace') and sys.gettrace() != None
@@ -23,10 +36,10 @@ ACCESSIBLE_APP_PREFIX = "/data/app"
 
 TMPDIR_NAME = "temp"
 
-ANALYZERS = {
-    'jsfile': 'JSAnalyzer',
-    'react': 'RNAnalyzer'
-}
+ANALYZERS = {}
+
+for analyzer_class in analyze.IAnalyzer.__subclasses__():
+    ANALYZERS[analyzer_class.get_tag()] = analyzer_class()
 
 DEFAULT_PARAMS = {
     'adbpath': 'adb',
@@ -73,7 +86,7 @@ def parse_args():
 def create_analyzer_instances() -> list:
     analyzers = []
     for analyzer_name in params['analyze-mode'].split('|'):
-        analyzers.append(globals()[ANALYZERS[analyzer_name]]())
+        analyzers.append(ANALYZERS[analyzer_name])
     return analyzers
 
 def read_gracelist(path: str) -> set:
